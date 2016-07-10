@@ -5,7 +5,7 @@ require 'yaml'
 require 'file/temp'
 
 class Page
-  attr_reader :name, :actions
+  attr_reader :name, :actions, :death
 
   def self.find(name)
     # Do we even have a page?
@@ -24,15 +24,16 @@ class Page
         actions = {}
       end
 
-      new(name, actions)
+      new(name, actions, metadata['death'])
     else
       raise "No page exists with name `#{name}`"
     end
   end
 
-  def initialize(name, actions)
+  def initialize(name, actions, death)
     @name = name
     @actions = actions
+    @death = death
   end
 
   def to_buildkite_pipeline
@@ -78,6 +79,10 @@ if ENV['CI']
 
   # Show the page of the adventure
   puts `pages/#{page.name}/render.sh`
+
+  if page.death
+    exit -1
+  end
 
   # Only continue to the next step if there are any actions to do
   if page.actions && page.actions.length > 0
