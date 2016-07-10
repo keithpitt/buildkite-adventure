@@ -21,7 +21,7 @@ def to_buildkite_pipeline(step)
         "fields" => [ { "text" => "Yes", "key" => "decision" } ]
       },
       {
-        "command" => "ruby adventure.rb",
+        "command" => "./adventure",
         "label" => ":book:"
       }
     ]
