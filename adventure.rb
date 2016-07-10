@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'yaml'
 
 class Step
@@ -15,7 +17,7 @@ def to_buildkite_pipeline(step)
   {
     "steps" => [
       {
-        "command" => "adventure.rb",
+        "command" => "ruby adventure.rb | buildkite-agent pipeline upload",
         "label" => step.label,
         "env" => { "ADVENTURE_SCRIPT" => step.script }
       },
