@@ -32,13 +32,17 @@ s = Step.new("welcome", [ "Go Left", "Go Right" ])
 
 # Get the previous decision
 decision_output, decision_error, decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
-unless decision_status.success?
-  puts decision_error
-end
 puts "PREVIOUS DECISION: #{decision_output}"
+
+# Get the last page
+last_page_output, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
+puts "last PAGE: #{last_page_output}"
 
 # Show the page of the adventure
 puts `pages/#{s.page}.sh`
+
+# Set meta data to store what page we're on
+Open3.capture3("buildkite-agent", "meta-data", "set", "page", s.page)
 
 # Upload new steps to BK to continue the adventure
 upload_input = to_buildkite_pipeline(s).to_yaml
