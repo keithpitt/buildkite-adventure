@@ -1,5 +1,9 @@
 #!/bin/bash
 
-./image "$(dirname $0)/building.jpg"
+echo ""
+echo "WELCOME TO RAILS CAMP ADELAIDE ADVENTURE 2016"
+echo ""
+echo "Hey there! Nice to meet you!"
+echo ""
 
-echo "Hello!"
+./image "$(dirname $0)/building.jpg"

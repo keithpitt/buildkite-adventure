@@ -2,5 +2,5 @@ actions:
   - text: "Enter the building and see what lies ahead"
     goto: "enter-building"
 
-  - text: "Turn around and run for your life"
+  - text: "Turn around and see what's the other way"
     goto: "turn-around"

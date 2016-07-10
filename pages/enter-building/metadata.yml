@@ -1,0 +1,18 @@
+actions:
+  - text: "Say hello to Tim Riley"
+    goto: "timriley-greet"
+
+  - text: "Say hello to Matt Allan"
+    goto: "matta-greet"
+
+  - text: "Say hello to Mel Kaufus"
+    goto: "mel-greet"
+
+  - text: "Say hello to Rob Jacoby"
+    goto: "rob-greet"
+
+  - text: "Say hello to John Barton"
+    goto: "jb-greet"
+
+  - text: "Say hello to David Goodlad"
+    goto: "goodlad-greet"
