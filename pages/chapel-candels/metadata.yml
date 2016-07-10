@@ -1,0 +1,6 @@
+actions:
+  - text: "Light the candels"
+    goto: "chapel-candels-light"
+
+  - text: "Don't light candels"
+    goto: "chapel-candels-dont-light"

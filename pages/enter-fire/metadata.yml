@@ -1,0 +1,6 @@
+actions:
+  - text: "Action a"
+    goto: "fire-nigel-die"
+
+  - text: "Action b"
+    goto: "fire-nigel-die"
