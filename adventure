@@ -106,7 +106,7 @@ else
     puts `pages/#{page.name}/render.sh`
 
     # Show the options
-    puts "What would you like to do?"
+    puts "\n=> What would you like to do?\n"
     index = 1
     keys = []
     page.actions.each_pair do |key, value|
@@ -129,5 +129,6 @@ else
     # Store the last stuff
     last_page_name = page.name
     last_decision = keys[decision_index - 1]
+    puts "\n\n\n"
   end
 end
