@@ -12,19 +12,24 @@ class Page
     if Dir.exist?("pages/#{name}")
       # Load the meta data for the page
       metadata = YAML.load_file("pages/#{name}/metadata.yml")
+      death = false
+      actions = {}
 
       # Do we even have any metadata?
       if metadata
-        # Convert the array of actions into a key/value hash for easier lookup
-        actions = metadata["actions"].inject({}) do |hash, action|
-          hash[action["text"]] = action["goto"]
-          hash
+        if metadata["actions"]
+          # Convert the array of actions into a key/value hash for easier lookup
+          actions = metadata["actions"].inject({}) do |hash, action|
+            hash[action["text"]] = action["goto"]
+            hash
+          end
         end
-      else
-        actions = {}
+
+        # Store the death...
+        death = metadata['death']
       end
 
-      new(name, actions, metadata['death'])
+      new(name, actions, death)
     else
       raise "No page exists with name `#{name}`"
     end
