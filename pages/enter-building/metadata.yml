@@ -5,7 +5,7 @@ actions:
   - text: "Say hello to Matt Allan"
     goto: "matta-greet"
 
-  - text: "Say hello to Mel Kaufus"
+  - text: "Say hello to Mel Kaulfuss"
     goto: "mel-greet"
 
   - text: "Say hello to Rob Jacoby"

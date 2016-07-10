@@ -1,0 +1,6 @@
+actions:
+  - text: "Vote jimmy out"
+    goto: "chapel-werewolf-die"
+
+  - text: "Don't Vote jimmy out"
+    goto: "chapel-werewolf-die"

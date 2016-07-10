@@ -1,0 +1,6 @@
+actions:
+  - text: "Play werewolf"
+    goto: "chapel-werewolf"
+
+  - text: "Go to the candels"
+    goto: "chapel-candels"
