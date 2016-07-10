@@ -1,5 +1,5 @@
 actions:
-  - text: "Cheers"
+  - text: "Respond with 'I'm here to have a few drinks, learn some stuff, and make some new friends'"
     goto: "mel-cheers"
-  - text: "Sad"
+  - text: "Ignore her question and say 'Daredevil Season 2 on Netflix is the worst'"
     goto: "mel-sad"

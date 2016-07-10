@@ -1,5 +1,5 @@
 actions:
-  - text: "win"
-    goto: "goodlad-win"
-  - text: "fail"
+  - text: "Ask him 'What part of the United States are you from?'"
     goto: "goodlad-fail"
+  - text: "Ask him 'Where abouts in Canada are you from?'"
+    goto: "goodlad-win"
