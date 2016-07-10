@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+require 'file/temp'
 
 class Step
   attr_reader :page, :actions
@@ -20,7 +21,7 @@ def to_buildkite_pipeline(step)
         "fields" => [ { "text" => "Yes", "key" => "decision" } ]
       },
       {
-        "command" => "ruby adventure.rb 2> >(buildkite-agent pipeline upload)",
+        "command" => "ruby adventure.rb",
         "label" => ":book:"
       }
     ]
@@ -29,5 +30,12 @@ end
 
 s = Step.new("welcome", [ "Go Left", "Go Right" ])
 
-STDOUT.puts `./pages/#{s.page}.sh`
-STDERR.puts to_buildkite_pipeline(s).to_yaml
+# Show the page of the adventure
+puts `pages/#{s.page}.sh`
+
+# Upload new steps to BK to continue the adventure
+tempfile = File::Temp.new(false, 'pipeline.yml')
+tempfile.write(to_buildkite_pipeline(s).to_yaml)
+tempfile.close
+
+`buildkite-agent pipeline upload #{tempfile.path}`
