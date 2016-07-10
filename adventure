@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'open3'
 require 'yaml'
 require 'file/temp'
 
@@ -21,7 +22,7 @@ def to_buildkite_pipeline(step)
         "fields" => [ { "text" => "Yes", "key" => "decision" } ]
       },
       {
-        "command" => "./adventure",
+        "command" => "adventure",
         "label" => ":book:"
       }
     ]
@@ -34,8 +35,9 @@ s = Step.new("welcome", [ "Go Left", "Go Right" ])
 puts `pages/#{s.page}.sh`
 
 # Upload new steps to BK to continue the adventure
-tempfile = File::Temp.new(false, 'pipeline.yml')
-tempfile.write(to_buildkite_pipeline(s).to_yaml)
-tempfile.close
+upload_input = to_buildkite_pipeline(s).to_yaml
+upload_output, upload_error, upload_status = Open3.capture3("buildkite-agent", "pipeline", "upload", stdin_data: upload_input)
 
-`buildkite-agent pipeline upload #{tempfile.path} > /dev/null`
+unless upload_status.success?
+  puts upload_error
+end
