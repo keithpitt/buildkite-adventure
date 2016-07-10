@@ -2,5 +2,5 @@ actions:
   - text: "Play werewolf"
     goto: "chapel-werewolf"
 
-  - text: "Go to the candels"
+  - text: "Go to the candles sign"
     goto: "chapel-candels"

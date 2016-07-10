@@ -1,6 +1,6 @@
 actions:
-  - text: "Vote jimmy out"
+  - text: "Vote to lynch Jimmy"
     goto: "chapel-werewolf-die"
 
-  - text: "Don't Vote jimmy out"
+  - text: "Don't vote to lynch Jimmy, but continue to have suspicions"
     goto: "chapel-werewolf-die"

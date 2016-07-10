@@ -1,6 +1,3 @@
 actions:
-  - text: "Action a"
-    goto: "fire-nigel-die"
-
-  - text: "Action b"
+  - text: "Respond with 'Nope'"
     goto: "fire-nigel-die"

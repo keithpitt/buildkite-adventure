@@ -1,6 +1,6 @@
 actions:
-  - text: "Light the candels"
+  - text: "Should we light some candles?"
     goto: "chapel-candels-light"
 
-  - text: "Don't light candels"
+  - text: "I'm not into candles..."
     goto: "chapel-candels-dont-light"
