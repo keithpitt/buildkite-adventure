@@ -51,7 +51,7 @@ puts `pages/#{page.name}/render.sh`
 Open3.capture3("buildkite-agent", "meta-data", "set", "page", page.name)
 
 # Upload new steps to BK to continue the adventure
-upload_input = page.to_buildkite_pipeline
+upload_input = page.to_buildkite_pipeline.to_yaml
 upload_output, upload_error, upload_status = Open3.capture3("buildkite-agent", "pipeline", "upload", stdin_data: upload_input)
 unless upload_status.success?
   puts "--- :warning: Failed to upload the next pipeline"
