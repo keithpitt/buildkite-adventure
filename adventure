@@ -7,6 +7,29 @@ require 'file/temp'
 class Page
   attr_reader :name, :actions
 
+  def self.find(name)
+    # Do we even have a page?
+    if Dir.exist?("pages/#{name}")
+      # Load the meta data for the page
+      metadata = YAML.load_file("pages/#{name}/metadata.yml")
+
+      # Do we even have any metadata?
+      if metadata
+        # Convert the array of actions into a key/value hash for easier lookup
+        actions = metadata["actions"].inject({}) do |hash, action|
+          hash[action["text"]] = action["goto"]
+          hash
+        end
+      else
+        actions = {}
+      end
+
+      new(name, actions)
+    else
+      raise "No page exists with name `#{name}`"
+    end
+  end
+
   def initialize(name, actions)
     @name = name
     @actions = actions
@@ -28,21 +51,26 @@ class Page
   end
 end
 
-# Get the previous decision
-decision_output, decision_error, decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
-puts "PREVIOUS DECISION: #{decision_output}"
+# Get the previous decision and page
+last_decision, last_decision_error, last_decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
+last_page_name, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
 
-# Get the last page
-last_page_output, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
-puts "last PAGE: #{last_page_output}"
-
-# Determine what page we should show
-page = Page.new("welcome", { "Go Left" => "foo", "Go Right" => "blah" })
+# Figure out the current page, either based on the previous decision, or
+# default to the first one.
+page = if not last_page_name.empty?
+         last_page = Page.find(last_page_name)
+         goto = last_page.actions[last_decision]
+         Page.find(goto)
+       else
+         Page.find("welcome")
+       end
 
 # Upload any images from the page as artifacts
 artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "*.jpg", chdir: "pages/#{page.name}")
 puts "UPLOAD: #{artifact_upload_output}"
 puts "UPLOAD STATUS: #{artifact_upload_status}"
+
+echo "+++ :book: Adventure..."
 
 # Show the page of the adventure
 puts `pages/#{page.name}/render.sh`
