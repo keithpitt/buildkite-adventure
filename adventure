@@ -38,4 +38,4 @@ tempfile = File::Temp.new(false, 'pipeline.yml')
 tempfile.write(to_buildkite_pipeline(s).to_yaml)
 tempfile.close
 
-`buildkite-agent pipeline upload #{tempfile.path}`
+`buildkite-agent pipeline upload #{tempfile.path} &2> /dev/null`
