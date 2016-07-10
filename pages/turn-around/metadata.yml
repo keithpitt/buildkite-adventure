@@ -1,6 +1,6 @@
 actions:
-  - text: "Go to the fire"
-    goto: "enter-fire"
-
   - text: "Go to the chapel"
     goto: "enter-chapel"
+
+  - text: "Go checkout the fire"
+    goto: "enter-fire"

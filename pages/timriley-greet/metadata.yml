@@ -1,5 +1,5 @@
 actions:
-  - text: "happy"
+  - text: "Yeah, I'd love to see something!"
     goto: "timriley-happy"
-  - text: "sad"
+  - text: "Nah"
     goto: "timriley-sad"
