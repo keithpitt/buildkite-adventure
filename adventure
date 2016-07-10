@@ -18,7 +18,6 @@ def to_buildkite_pipeline(step)
     "steps" => [
       {
         "block" => ":point_right:",
-        "prompt" => "Choose the next action!",
         "fields" => [ { "select" => "What would you like to do?", "key" => "decision", "options" => step.actions } ]
       },
       {
