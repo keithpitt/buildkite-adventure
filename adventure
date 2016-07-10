@@ -70,7 +70,7 @@ artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.ca
 puts "UPLOAD: #{artifact_upload_output}"
 puts "UPLOAD STATUS: #{artifact_upload_status}"
 
-echo "+++ :book: Adventure..."
+puts "+++ :book: Adventure..."
 
 # Show the page of the adventure
 puts `pages/#{page.name}/render.sh`
