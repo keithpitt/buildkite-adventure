@@ -40,7 +40,7 @@ puts "last PAGE: #{last_page_output}"
 page = Page.new("welcome", { "Go Left" => "foo", "Go Right" => "blah" })
 
 # Upload any images from the page as artifacts
-artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "pages/#{page.name}/*.JPG")
+artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "*.jpg", chdir: "pages/#{page.name}")
 puts "UPLOAD: #{artifact_upload_output}"
 puts "UPLOAD STATUS: #{artifact_upload_status}"
 
