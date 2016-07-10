@@ -51,30 +51,34 @@ class Page
   end
 end
 
-# Get the previous decision and page
-last_decision, last_decision_error, last_decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
-last_page_name, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
-
-# Figure out the current page, either based on the previous decision, or
-# default to the first one.
-page = if not last_page_name.empty?
-         last_page = Page.find(last_page_name)
-         goto = last_page.actions[last_decision]
-         Page.find(goto)
-       else
-         Page.find("welcome")
-       end
-
-# Upload any images from the page as artifacts
-artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "pages/#{page.name}/*.jpg")
-
-puts "+++ :book: Adventure..."
-
-# Show the page of the adventure
-puts `pages/#{page.name}/render.sh`
+def determine_page(last_page_name, last_decision)
+  if last_page_name && !last_page_name.empty?
+    last_page = Page.find(last_page_name)
+    goto = last_page.actions[last_decision]
+    Page.find(goto)
+  else
+    Page.find("welcome")
+  end
+end
 
 # Only set the meta data and upload the build pipeline if we're on CI
 if ENV['CI']
+  # Get the previous decision and page
+  last_page_name, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
+  last_decision, last_decision_error, last_decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
+
+  # Figure out the current page, either based on the previous decision, or
+  # default to the first one.
+  page = determine_page(last_page_name, last_decision)
+
+  # Upload any images from the page as artifacts
+  artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "pages/#{page.name}/*.jpg")
+
+  puts "+++ :book: Adventure..."
+
+  # Show the page of the adventure
+  puts `pages/#{page.name}/render.sh`
+
   # Set meta data to store what page we're on
   Open3.capture3("buildkite-agent", "meta-data", "set", "page", page.name)
 
@@ -88,5 +92,42 @@ if ENV['CI']
     puts ""
     puts "And this was the error..."
     puts upload_error
+  end
+else
+  last_page_name = nil
+  last_decision = nil
+
+  while true
+    # Figure out the current page, either based on the previous decision, or
+    # default to the first one.
+    page = determine_page(last_page_name, last_decision)
+
+    # Show the page of the adventure
+    puts `pages/#{page.name}/render.sh`
+
+    # Show the options
+    puts "What would you like to do?"
+    index = 1
+    keys = []
+    page.actions.each_pair do |key, value|
+      puts "#{index}. #{key}"
+      keys << key
+      index += 1
+    end
+
+    # Get the decision based off the number
+    decision_index = nil
+    while true
+      decision_index = gets.chomp.to_i
+      if decision_index == 0 || decision_index > keys.length
+        puts "Plese enter a number greater than 0, and less than #{keys.length}"
+        next
+      end
+      break
+    end
+
+    # Store the last stuff
+    last_page_name = page.name
+    last_decision = keys[decision_index - 1]
   end
 end
