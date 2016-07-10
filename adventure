@@ -66,7 +66,7 @@ page = if not last_page_name.empty?
        end
 
 # Upload any images from the page as artifacts
-artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "*.jpg", chdir: "pages/#{page.name}")
+artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "*.jpg")
 
 puts "+++ :book: Adventure..."
 

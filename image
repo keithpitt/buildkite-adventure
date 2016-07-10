@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "$CI" ]]; then
+  ./utils/imgref.sh "artifact://$1" $1
+else
+  ./utils/imgcat.sh $1
+fi
+
+exit 0

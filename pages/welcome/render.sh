@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./imgref "artifact://building.jpg" "Enter the building"
+./image "$(dirname $0)/building.jpg"
 
 echo "Hello!"
