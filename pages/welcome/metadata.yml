@@ -1,0 +1,6 @@
+actions:
+  - text: "Enter the building and see what lies ahead"
+    goto: "enter-building"
+
+  - text: "Turn around and run for your life"
+    goto: "turn-around"

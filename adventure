@@ -4,31 +4,29 @@ require 'open3'
 require 'yaml'
 require 'file/temp'
 
-class Step
-  attr_reader :page, :actions
+class Page
+  attr_reader :name, :actions
 
-  def initialize(page, actions)
-    @page = page
+  def initialize(name, actions)
+    @name = name
     @actions = actions
   end
-end
 
-def to_buildkite_pipeline(step)
-  {
-    "steps" => [
-      {
-        "block" => ":point_right:",
-        "fields" => [ { "select" => "What would you like to do?", "key" => "decision", "options" => step.actions } ]
-      },
-      {
-        "command" => "adventure",
-        "label" => ":book:"
-      }
-    ]
-  }
+  def to_buildkite_pipeline
+    {
+      "steps" => [
+        {
+          "block" => ":point_right:",
+          "fields" => [ { "select" => "What would you like to do?", "key" => "decision", "options" => @actions.keys } ]
+        },
+        {
+          "command" => "adventure",
+          "label" => ":book:"
+        }
+      ]
+    }
+  end
 end
-
-s = Step.new("welcome", [ "Go Left", "Go Right" ])
 
 # Get the previous decision
 decision_output, decision_error, decision_status = Open3.capture3("buildkite-agent", "meta-data", "get", "decision")
@@ -38,14 +36,22 @@ puts "PREVIOUS DECISION: #{decision_output}"
 last_page_output, last_page_error, last_page_status = Open3.capture3("buildkite-agent", "meta-data", "get", "page")
 puts "last PAGE: #{last_page_output}"
 
+# Determine what page we should show
+page = Page.new("welcome", { "Go Left" => "foo", "Go Right" => "blah" })
+
+# Upload any images from the page as artifacts
+artifact_upload_output, artifact_upload_error, artifact_upload_status = Open3.capture3("buildkite-agent", "artifact", "upload", "pages/#{page.name}/*.JPG")
+puts "UPLOAD: #{artifact_upload_output}"
+puts "UPLOAD STATUS: #{artifact_upload_status}"
+
 # Show the page of the adventure
-puts `pages/#{s.page}.sh`
+puts `pages/#{page.name}/render.sh`
 
 # Set meta data to store what page we're on
-Open3.capture3("buildkite-agent", "meta-data", "set", "page", s.page)
+Open3.capture3("buildkite-agent", "meta-data", "set", "page", page.name)
 
 # Upload new steps to BK to continue the adventure
-upload_input = to_buildkite_pipeline(s).to_yaml
+upload_input = page.to_buildkite_pipeline
 upload_output, upload_error, upload_status = Open3.capture3("buildkite-agent", "pipeline", "upload", stdin_data: upload_input)
 unless upload_status.success?
   puts upload_error
